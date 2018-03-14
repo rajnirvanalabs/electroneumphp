@@ -8,7 +8,7 @@
  require_once('src/Electroneum_RPC.php');
 
 /* Edit it with your ip and your port of Electroneum RPC */
-$electroneum_rpc = new Electroneum_RPC('http://127.0.0.1','18082');
+$electroneum_rpc = new Electroneum_RPC('127.0.0.1','18082');
 
 ?>
 <html>
