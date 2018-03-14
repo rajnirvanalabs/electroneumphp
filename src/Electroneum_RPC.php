@@ -1,24 +1,26 @@
-<?php
+electroneum<?php
 
 /**
  *  Monero PHP API
  *  Copyright (c) 2017-2018 Monero Integrations
  *  @version    0.2
  *  @year       2017
- *  
+ *
+ * Modified to work with Electroneum Cryptocurrency (ETN)
+ * Modified by Nirvanalabs (http://nirvanalabs.co)
  */
- 
 
- class Monero_RPC{
+
+ class Electroneum_RPC{
     private $url;
-    private $client; 
+    private $client;
     private $ip;
     private $port;
-    
+
      /**
      *  Start the connection with daemon
-     *  @param  $ip   IP of Monero RPC
-     *  @param  $port Port of Monero RPC
+     *  @param  $ip   IP of Electroneum RPC
+     *  @param  $port Port of Electroneum RPC
      */
     function __construct ($ip = '127.0.0.1', $port, $protocol = 'http', $user = null, $password = null){
         $this->ip = $ip;
@@ -29,7 +31,7 @@
         $this->password = $password;
         $this->client = new jsonRPCClient($this->url, $this->user, $this->password);
      }
-     
+
      /*
       * Run a method or method + parameters
       * @param  $method   Name of Method
@@ -38,12 +40,12 @@
       $result = $this->client->_run($method, $params);
       return $result;
     }
-  
+
      private function _transform($amount){
-      $new_amount = $amount * 100000000;
+      $new_amount = $amount * 100; // Changed Atomic units to 2 decimal points (0.01)
       return $new_amount;
      }
-    
+
     /**
      * Print json (for api)
      * @return $json_parsed
@@ -52,54 +54,54 @@
         $json_parsed = json_encode($json,  JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         echo $json_parsed;
     }
-  
+
    /**
-    * Print Monero Address as JSON Array
+    * Print Electroneum Address as JSON Array
     * @return $address
     */
     public function getaddress(){
         $address = $this->_run('getaddress');
         return $address;
     }
-  
+
    /*
-    * Print Monero Balance as JSON Array
+    * Print Electroneum Balance as JSON Array
     */
     public function getbalance(){
          $balance = $this->_run('getbalance');
          return $balance;
   }
-  
+
   /*
-    * Print Monero Height as JSON Array
+    * Print Electroneum Height as JSON Array
     */
     public function getheight(){
          $height = $this->_run('getheight');
          return $height;
   }
-  
+
      /*
      * Incoming Transfer
-     * $type must be All 
+     * $type must be All
      */
    public function incoming_transfer($type){
         $incoming_parameters = array('transfer_type' => $type);
         $incoming_transfers = $this->_run('incoming_transfers', $incoming_parameters);
         return $incoming_transfers;
     }
-  
+
     public function get_transfers($input_type, $input_value){
         $get_parameters = array($input_type => $input_value);
         $get_transfers = $this->_run('get_transfers', $get_parameters);
         return $get_transfers;
     }
-     
+
      public function view_key(){
         $query_key = array('key_type' => 'view_key');
         $query_key_method = $this->_run('query_key', $query_key);
         return $query_key_method;
      }
-     
+
         /* A payment id can be passed as a string
            A random payment id will be generatd if one is not given */
      public function make_integrated_address($payment_id){
@@ -107,7 +109,7 @@
         $integrate_address_method = $this->_run('make_integrated_address', $integrate_address_parameters);
         return $integrate_address_method;
      }
-     
+
     public function split_integrated_address($integrated_address){
         if(!isset($integrated_address)){
             echo "Error: Integrated_Address mustn't be null";
@@ -118,55 +120,55 @@
         return $split_methods;
         }
     }
-  
+
   public function make_uri($address, $amount, $recipient_name = null, $description = null){
-        // If I pass 1, it will be 1 xmr. Then 
-        $new_amount = $amount * 1000000000000;
-       
+        // If I pass 1, it will be 1 etn. Then
+        $new_amount = $amount * 100; // Changed atomic units into 2 decimal points
+
          $uri_params = array('address' => $address, 'amount' => $new_amount, 'payment_id' => '', 'recipient_name' => $recipient_name, 'tx_description' => $description);
         $uri = $this->_run('make_uri', $uri_params);
         return $uri;
     }
-     
-     
+
+
     public function parse_uri($uri){
          $uri_parameters = array('uri' => $uri);
         $parsed_uri = $this->_run('parse_uri', $uri_parameters);
         return $parsed_uri;
     }
-     
+
     public function transfer($amount, $address, $mixin = 4){
-        $new_amount = $amount  * 1000000000000;
+        $new_amount = $amount  * 100; // Changed atomic units into 2 decimal points
         $destinations = array('amount' => $new_amount, 'address' => $address);
         $transfer_parameters = array('destinations' => array($destinations), 'mixin' => $mixin, 'get_tx_key' => true, 'unlock_time' => 0, 'payment_id' => '');
         $transfer_method = $this->_run('transfer', $transfer_parameters);
         return $transfer_method;
     }
-  
+
   public function get_payments($payment_id){
    $get_payments_parameters = array('payment_id' => $payment_id);
    $get_payments = $this->_run('get_payments', $get_payments_parameters);
    return $get_payments;
   }
-  
+
      public function get_bulk_payments($payment_id, $min_block_height){
       $get_bulk_payments_parameters = array('payment_id' => $payment_id, 'min_block_height' => $min_block_height);
       $get_bulk_payments = $this->_run('get_bulk_payments', $get_bulk_payments_parameters);
       return $get_bulk_payments;
  }
-  
+
   public function get_transfer_by_txid($txid){
     $get_transfer_by_txid_parameters = array('txid' => $txid);
    $get_transfer_by_txid = $this->_run('get_transfer_by_txid', $get_transfer_by_txid_parameters);
    return $get_transfer_by_txid;
   }
-  
+
   public function rescan_blockchain(){
    $rescan_blockchain = $this->run('rescan_blockchain');
    return $rescan_blockchain;
 }
-  
-  public function create_wallet($filename = 'monero_wallet', $password){
+
+  public function create_wallet($filename = 'electroneum_wallet', $password){
    $create_wallet_parameters = array('filename' => $filename, 'password' => $password, 'language' => 'English');
    $create_wallet_method = $this->run('create_wallet', $create_wallet_parameters);
    return $create_wallet_method;
@@ -177,12 +179,11 @@
    $open_wallet_method = $this->run('open_wallet',$open_wallet_parameters);
    return $open_wallet_method;
   }
-  
+
   public function sign($data){
    $sign_parameters = array('string' => $data);
    $sign_method = $this->run('sign',$sign_parameters);
    return $sign_method;
   }
-  
- }  
-  
+
+ }

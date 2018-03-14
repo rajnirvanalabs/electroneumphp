@@ -1,8 +1,8 @@
-# Monero Library
-A Monero library written in PHP by the Monero-Integrations team.
+# Electroneum Library
+A Electroneum library written in PHP by Nirvanalabs, modified monerophp by Monero-Integrations to work with Electroneum.
 
 ## How It Works
-This library has 2 parts. The first is a wrapper for the monero-wallet-rpc JSON RPC API. (Monero_Payments.php)
+This library has 2 parts. The first is a wrapper for the electroneum-wallet-rpc JSON RPC API. (Electroneum_Payments.php)
 The second is a Monero/Cryptonote toolbox (cryptonote.php) with both lower level functions used in Monero related cryptograhy and higher level methods for things like generating Monero private/public keys.
 
 ## Preview
@@ -14,7 +14,7 @@ The second is a Monero/Cryptonote toolbox (cryptonote.php) with both lower level
  - Ubuntu or Debian
  - Monero daemon
  - PHP server like XMPP, Apache or NGINX
- 
+
 ###
 
 Step 1: Start the Monero Daemon as Testnet
@@ -30,4 +30,4 @@ monero-wallet-rpc --testnet --rpc-bind-port 28080 --disable-rpc-login --wallet-f
 Step 3: Edit example.php with your ip (`127.0.0.1` for localhost) and port of Monero Wallet RPC (in the example it's `127.0.0.1:28080`)
 
 
-Step 4: Open your browser with your ip of XMPP, apache or NGINX server and execute example.php. If the library works, it will print your Monero address
+Step 4: Open your browser with your ip of XMPP, apache or NGINX server and execute example.php. If the library works, it will print your Electroneum address
