@@ -1,6 +1,8 @@
 <?php
 /*
 Copyright (c) 2018 Monero-Integrations
+Modified to work with Electroneum Cryptocurrency (ETN)
+ * Modified by Nirvanalabs (http://nirvanalabs.co)
 */
     require_once("SHA3.php");
     require_once("ed25519.php");
@@ -124,7 +126,7 @@ Copyright (c) 2018 Monero-Integrations
 		return false;
 	}
 
-	// param (string) $address = base58 encoded monero address
+	// param (string) $address = base58 encoded electroneum address
 	public function decode_address($address)
         {
             $decoded = $this->base58->decode($address);
